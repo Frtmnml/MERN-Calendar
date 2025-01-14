@@ -1,9 +1,15 @@
 import { useState } from 'react';
 import Modal from 'react-modal/lib/components/Modal'
+import Swal from 'sweetalert2'
+import 'sweetalert2/dist/sweetalert2.min.css'
+
 import DatePicker, { registerLocale } from "react-datepicker";
+
 import "react-datepicker/dist/react-datepicker.css";
+
 import { addHours, differenceInSeconds } from 'date-fns';
 import { es } from 'date-fns/locale/es';
+
 
 
 registerLocale('es', es)
@@ -24,7 +30,8 @@ Modal.setAppElement('#root');
 
 export const CalendarModal = () => {
 
-  const [isOpen, setIsOpen] = useState(true)
+  const [isOpen, setIsOpen] = useState(true);
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
   const [formValue, setFormValue] = useState({
     title: 'Joshua',
@@ -57,9 +64,11 @@ export const CalendarModal = () => {
 
   const onSubmit = (event) => {
     event.preventDefault();
+    setFormSubmitted(true);
+
     const difference = differenceInSeconds( formValue.end, formValue.start);
     if( isNaN(difference) || difference < 0 ){
-      console.log('Error en Fechas ❌')
+      Swal.fire('Fecha incorrectas', 'Revisar las fechas ingresadas', 'error')
       return 
     }
 
