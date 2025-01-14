@@ -9,6 +9,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import { addHours, differenceInSeconds } from 'date-fns';
 import { es } from 'date-fns/locale/es';
+import { useMemo } from 'react';
 
 
 
@@ -40,6 +41,15 @@ export const CalendarModal = () => {
     end: addHours(new Date(), 2),
   })
 
+  const titleClass = useMemo(() => {
+    if( !formSubmitted ) return '';;
+
+    return (formValue.title.length > 0)
+    ? ''
+    : 'is-invalid'
+
+  }, [formValue.title, formSubmitted] )
+
   const onInputChange = ({target}) => {
     setFormValue({
       ...formValue,
@@ -69,12 +79,10 @@ export const CalendarModal = () => {
     const difference = differenceInSeconds( formValue.end, formValue.start);
     if( isNaN(difference) || difference < 0 ){
       Swal.fire('Fecha incorrectas', 'Revisar las fechas ingresadas', 'error')
-      return 
+      return;
     }
 
-    if (formValue.title.lenght <= 0){
-      return 
-    }
+    if (formValue.title.length <= 0) return;
 
     console.log('Formvalues', formValue)
 
@@ -132,7 +140,7 @@ export const CalendarModal = () => {
           <label>Titulo y notas</label>
           <input
             type="text"
-            className="form-control"
+            className= {`form-control ${titleClass}`}
             placeholder="Título del evento"
             name="title"
             autoComplete="off"
